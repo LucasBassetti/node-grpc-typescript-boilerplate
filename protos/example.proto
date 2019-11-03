@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package examplepackage;
+
+service Example {
+  rpc VerifyModel(Message) returns (Diagnoses) {}
+}
+
+message Message {
+  string model = 1;
+}
+
+message Diagnoses {
+  string reply = 1;
+}

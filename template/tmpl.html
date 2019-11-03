@@ -1,0 +1,100 @@
+{{template "common.html"}}
+
+<div class="doc">
+	{{template "Package" .}}
+
+	<!-- Dependencies -->
+	{{if .Dependency}}
+		<div class="doc-dependencies">
+			<h1>Dependencies</h1>
+			<div class="doc-inner">
+				<ul>
+					{{range $d := .Dependency}}
+						<li>{{$d}}</li>
+					{{end}}
+				</ul>
+			</div>
+		</div>
+	{{end}}
+
+	<!-- Enumerations -->
+	{{$enums := AllEnums true}}
+	{{if $enums}}
+		<div class="doc-enum-types">
+			<h1>Enums</h1>
+			{{range $e := $enums}}
+				<div class="doc-inner">
+					<h2 id="{{$e.Name}}">Enum: {{$e.Name}}</h2>
+					{{template "CommentsParagraph" $e}}
+					{{if $e.Value}}
+						<table>
+							<tr><td>Name</td><td>Value</td><td>Description</td></tr>
+							{{range .Value}}
+								<tr>
+									<td>{{.Name}}</td>
+									<td>{{.Number}} {{if .Options}}{{if .Options.Deprecated}}(deprecated){{end}}{{end}}</td>
+									<td>{{template "Comments" .}}</td>
+								</tr>
+							{{end}}
+						</table>
+					{{end}}
+				</div>
+			{{end}}
+		</div>
+	{{end}}
+
+	<!-- Extensions -->
+	{{if .Extension}}
+		<div class="doc-extensions">
+			<h1>Extensions</h1>
+			{{range $e := .Extension}}
+				<div class="doc-inner">
+					<h2 id="{{$e.Name}}">Extension: {{$e.Name}}</h2>
+					{{template "CommentsParagraph" $e}}
+				</div>
+			{{end}}
+		</div>
+	{{end}}
+
+	<!-- Services -->
+	{{if .Service}}
+		<div class="doc-services">
+			<h1>Services</h1>
+			{{range $s := .Service}}
+				<div class="doc-inner">
+					<h2 id="{{$s.Name}}">Service: <a href="{{$s.Name}}.html">{{$s.Name}}</a></h2>
+				</div>
+			{{end}}
+		</div>
+	{{end}}
+
+	<!-- Messages -->
+	{{$messages := AllMessages true}}
+	{{if $messages}}
+		<div class="doc-message-types">
+			<h1>Messages</h1>
+			{{range $m := $messages}}
+				<div class="doc-inner">
+					<h2 id="{{$m.Name}}">Message: {{$m.Name}}</h2>
+					{{template "CommentsParagraph" $m}}
+					<table>
+						<tr><td>#</td><td>Field</td><td>Label</td><td>Type</td><td>Description</td></tr>
+						{{range $m.Field}}
+							<tr>
+								<td>{{.Number}}</td>
+								<td>{{.Name}}</td>
+								<td>{{cleanLabel .Label}}</td>
+								{{if .TypeName}}
+									<td><a href="{{urlToType .TypeName}}">{{fieldType .}}</td>
+								{{else}}
+									<td>{{fieldType .}}</td>
+								{{end}}
+								<td>{{template "Comments" .}}</td>
+							</tr>
+						{{end}}
+					</table>
+				</div>
+			{{end}}
+		</div>
+	{{end}}
+</div>
